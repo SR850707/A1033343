@@ -54,27 +54,29 @@
     mysqli_query($conni,"SET CHARACTER_SET_RESULTS=UTF8'");
     mysqli_query($conni,"SET character_set_connection=utf8, character_set_results=utf8, character_set_client=binary");
 
-	$shops = mysql_query("select 2 from classforphp;");
-if(!$shops){
+	$result = mysql_query("select 2 from classforphp;");
+
+	if(!$result){
    	echo "Execute SQL failed : ". mysql_error();
 	exit;
-}
-$shopCodeArr=array();     //用來存哪些選項的陣列
-$shopCount=0;
-while($rows=mysql_fetch_array($shops))
-{
-	$shopCodeArr[$shopCount]=$rows[想要的資料表內容];
-	$shopCount++;
-}
-for($i=0;$i<count($shopCodeArr);$i++)
-{
+    }
+
+    $resultCodeArr=array();     //用來存哪些選項的陣列
+    $resultCount=0;
+    while($rows=mysql_fetch_array($result))
+    {
+	    $resultCodeArr[$shopCount]=$rows[想要的資料表內容];
+	    $resultCount++;
+    }
+
+    for($i=0;$i<count($resultCodeArr);$i++)
+    {
 	echo "<script type=\"text/javascript\">";
 	echo "document.getElementById(\"shopList\").options[$i]=new Option(\"$shopCodeArr[$i]\",\"$shopCodeArr[$i]\");";
 	echo "</script>";
-}
+    }
 
-?>
-		
+?>	
 	
 	縣市+區域<input type="text" id="address"></br>
 	<!--加分題(需chrome可用)--><input type="button" value="下載">
@@ -89,21 +91,3 @@ for($i=0;$i<count($shopCodeArr);$i++)
 </body>
 
 </html>
-
-
-
-<?php
-
-$filename = "theDownloadedFileIsCalledThis.mp3";
-$myFile = "/absolute/path/to/my/file.mp3";
-
-$mm_type="application/octet-stream";
-
-header("Cache-Control: public, must-revalidate");
-header("Pragma: hack"); // WTF? oh well, it works...
-header("Content-Type: " . $mm_type);
-header("Content-Length: " .(string)(filesize($myFile)) );
-header('Content-Disposition: attachment; filename="'.$filename.'"');
-header("Content-Transfer-Encoding: binary\n");
-readfile($myFile);
-?>
