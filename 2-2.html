@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>2-2</title>
+</head>
+
+<body>
+	<!--使用ajax從後台抓出資料-->
+	<script src="http://ajax.googleapiscom/ajex/libs/jquery/1.11.0/jquery-1.12.4.min.js"></script>
+	<script>
+
+	$.ajax({
+    	url: "2.sql",
+    	type: 'GET',
+    	error: function(){
+    		console.log('error');
+    	},
+    });
+	
+	</script>
+
+	<form>
+	<!--此為範例 請自行修改-->
+		<select name="YourLocation">
+　			<option value="Taipei">台北市</option>
+			<option value="Tainan">台南市</option>
+　			<option value="Kaohsiung">高雄市</option>
+		</select>
+
+		<select name="area">
+			
+		</select>
+	</form>
+
+	<?php
+
+	$dbServer="localhost";
+	$dbUser="localhost";
+	$dbPass="rootphp";
+	$dbName="2";
+
+	$conni=mysqli_connect('localhost','rootphp','classforphp','2');	
+                                   //"帳號"    "密碼"   "資料庫名稱"
+
+    if(mysqli_connect_errno($conn)){
+        die("無法連線到資料庫伺服器");
+    }
+
+    mysqli_query($conni,"SET NAMES 'UTF8'");
+    mysqli_query($conni,"SET CHARACTER SET UTF8"); 
+    mysqli_query($conni,"SET CHARACTER_SET_RESULTS=UTF8'");
+    mysqli_query($conni,"SET character_set_connection=utf8, character_set_results=utf8, character_set_client=binary");
+
+	$shops = mysql_query("select 2 from classforphp;");
+if(!$shops){
+   	echo "Execute SQL failed : ". mysql_error();
+	exit;
+}
+$shopCodeArr=array();     //用來存哪些選項的陣列
+$shopCount=0;
+while($rows=mysql_fetch_array($shops))
+{
+	$shopCodeArr[$shopCount]=$rows[想要的資料表內容];
+	$shopCount++;
+}
+for($i=0;$i<count($shopCodeArr);$i++)
+{
+	echo "<script type=\"text/javascript\">";
+	echo "document.getElementById(\"shopList\").options[$i]=new Option(\"$shopCodeArr[$i]\",\"$shopCodeArr[$i]\");";
+	echo "</script>";
+}
+
+?>
+		
+	
+	縣市+區域<input type="text" id="address"></br>
+	<!--加分題(需chrome可用)--><input type="button" value="下載">
+
+	<?php
+	    header('Content-type:application/force-download');  
+        header('Content-Transfer-Encoding: utf-8'); 
+        header('Content-Disposition:attachment;filename=area.txt'); 
+        echo 'Hello PHP';
+	?>
+
+</body>
+
+</html>
+
+
+
+<?php
+
+$filename = "theDownloadedFileIsCalledThis.mp3";
+$myFile = "/absolute/path/to/my/file.mp3";
+
+$mm_type="application/octet-stream";
+
+header("Cache-Control: public, must-revalidate");
+header("Pragma: hack"); // WTF? oh well, it works...
+header("Content-Type: " . $mm_type);
+header("Content-Length: " .(string)(filesize($myFile)) );
+header('Content-Disposition: attachment; filename="'.$filename.'"');
+header("Content-Transfer-Encoding: binary\n");
+readfile($myFile);
+?>
